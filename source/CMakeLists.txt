@@ -1,0 +1,8 @@
+set(SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/debug_draw.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+)
+
+set(SOURCES ${SOURCES} PARENT_SCOPE)
