@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window/Event.hpp>
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 namespace im_sf {
 
@@ -69,14 +69,7 @@ void renderDrawLists(ImDrawData* draw_data) {
     }
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-#ifdef GL_VERSION_ES_CL_1_1
-    GLint last_program, last_texture, last_array_buffer, last_element_array_buffer;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-#else
     glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_TRANSFORM_BIT);
-#endif
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -97,11 +90,7 @@ void renderDrawLists(ImDrawData* draw_data) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-#ifdef GL_VERSION_ES_CL_1_1
-    glOrthof(0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, -1.0f, +1.0f);
-#else
     glOrtho(0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, -1.0f, +1.0f);
-#endif
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -135,14 +124,7 @@ void renderDrawLists(ImDrawData* draw_data) {
             idx_buffer += pcmd->ElemCount;
         }
     }
-#ifdef GL_VERSION_ES_CL_1_1
-    glBindTexture(GL_TEXTURE_2D, last_texture);
-    glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
-    glDisable(GL_SCISSOR_TEST);
-#else
     glPopAttrib();
-#endif
 }
 
 void init(sf::RenderWindow& window) {
@@ -262,7 +244,9 @@ void update(const sf::Time& dt) {
     updateMouseCursor(*s_window);
 
     ImGuiIO& io = ImGui::GetIO();
-    //io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
+
+    auto displaySize = s_window->getSize();
+    io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
 
     io.DeltaTime = dt.asSeconds();
     auto mousePos = sf::Mouse::getPosition(*s_window);

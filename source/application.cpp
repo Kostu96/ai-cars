@@ -3,10 +3,10 @@
 #include "common.h"
 
 #include <SFML/Window/Event.hpp>
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 Application::Application() :
-    m_window(sf::VideoMode(1280, 720), "AI Cars"),
+    m_window(sf::VideoMode(1280, 720), "AI Cars", sf::Style::Close),
     m_dbgDrawHelper(m_window)
 {
     m_window.setFramerateLimit(60);
@@ -56,10 +56,17 @@ void Application::render()
 
     m_world->DebugDraw();
 
-    //ImGui::Begin("Options");
-    //ImGui::SliderFloat(STRINGIFY(renderScaleFactor), &renderScaleFactor, 16.f, 36.f);
-    //ImGui::End();
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+    ImGui::SetNextWindowPos({ 0.f, 0.f });
+    if (ImGui::Begin("Options", nullptr, flags)) {
+        ImGui::SliderFloat(STRINGIFY(renderScaleFactor), &renderScaleFactor, 16.f, 36.f);
+        if (ImGui::Button("Start Simulation")) {
+            // Code for starting simulation
+        }
+    }
+    ImGui::End();
 
+    //temp
     ImGui::ShowDemoWindow();
 
     im_sf::render();

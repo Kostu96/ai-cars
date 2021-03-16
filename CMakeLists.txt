@@ -25,31 +25,10 @@ if (MSVC)
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 endif()
 
-# Add SFML, box2d and ImGUI libraries:
-set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
-set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "" FORCE)
-add_subdirectory(third_party/box2d)
-
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
-add_subdirectory(third_party/SFML)
-
-add_subdirectory(third_party/box2d/extern/imgui)
+add_subdirectory(third_party)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     sfml-graphics
     box2d
     imgui
-)
-
-set_target_properties(
-    box2d
-    imgui
-    sfml-graphics
-    sfml-main
-    sfml-system
-    sfml-window
-    PROPERTIES
-    FOLDER third_party
 )
