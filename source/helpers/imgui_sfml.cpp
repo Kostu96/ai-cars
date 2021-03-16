@@ -14,6 +14,9 @@ static bool s_mousePressed[3] = { false, false, false };
 static sf::Texture* s_fontTexture = nullptr;
 static sf::RenderWindow* s_window = nullptr;
 
+sf::Cursor* s_mouseCursors[ImGuiMouseCursor_COUNT];
+bool s_mouseCursorLoaded[ImGuiMouseCursor_COUNT];
+
 ImTextureID convertGLTextureHandleToImTextureID(GLuint glTextureHandle) {
     ImTextureID textureID = nullptr;
     std::memcpy(&textureID, &glTextureHandle, sizeof(GLuint));
@@ -24,6 +27,29 @@ GLuint convertImTextureIDToGLTextureHandle(ImTextureID textureID) {
     GLuint glTextureHandle;
     std::memcpy(&glTextureHandle, &textureID, sizeof(GLuint));
     return glTextureHandle;
+}
+
+void loadMouseCursor(ImGuiMouseCursor imguiCursorType, sf::Cursor::Type sfmlCursorType) {
+    s_mouseCursors[imguiCursorType] = new sf::Cursor();
+    s_mouseCursorLoaded[imguiCursorType] =
+        s_mouseCursors[imguiCursorType]->loadFromSystem(sfmlCursorType);
+}
+
+void updateMouseCursor(sf::Window& window) {
+    ImGuiIO& io = ImGui::GetIO();
+    if ((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) == 0) {
+        ImGuiMouseCursor cursor = ImGui::GetMouseCursor();
+        if (io.MouseDrawCursor || cursor == ImGuiMouseCursor_None) {
+            window.setMouseCursorVisible(false);
+        }
+        else {
+            window.setMouseCursorVisible(true);
+
+            sf::Cursor& c = s_mouseCursorLoaded[cursor] ? *s_mouseCursors[cursor] :
+                *s_mouseCursors[ImGuiMouseCursor_Arrow];
+            window.setMouseCursor(c);
+        }
+    }
 }
 
 void renderDrawLists(ImDrawData* draw_data) {
@@ -153,6 +179,19 @@ void init(sf::RenderWindow& window) {
     auto displaySize = window.getSize();
     io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
 
+    // load mouse cursors
+    for (int i = 0; i < ImGuiMouseCursor_COUNT; ++i) {
+        s_mouseCursorLoaded[i] = false;
+    }
+    loadMouseCursor(ImGuiMouseCursor_Arrow, sf::Cursor::Arrow);
+    loadMouseCursor(ImGuiMouseCursor_TextInput, sf::Cursor::Text);
+    loadMouseCursor(ImGuiMouseCursor_ResizeAll, sf::Cursor::SizeAll);
+    loadMouseCursor(ImGuiMouseCursor_ResizeNS, sf::Cursor::SizeVertical);
+    loadMouseCursor(ImGuiMouseCursor_ResizeEW, sf::Cursor::SizeHorizontal);
+    loadMouseCursor(ImGuiMouseCursor_ResizeNESW, sf::Cursor::SizeBottomLeftTopRight);
+    loadMouseCursor(ImGuiMouseCursor_ResizeNWSE, sf::Cursor::SizeTopLeftBottomRight);
+    loadMouseCursor(ImGuiMouseCursor_Hand, sf::Cursor::Hand);
+
     // Default Font stuff
     if (s_fontTexture) {
         delete s_fontTexture;
@@ -220,6 +259,8 @@ void processEvents(const sf::Event& e)
 }
 
 void update(const sf::Time& dt) {
+    updateMouseCursor(*s_window);
+
     ImGuiIO& io = ImGui::GetIO();
     //io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
 
@@ -258,6 +299,21 @@ void render() {
 }
 
 void shutdown() {
+    ImGui::GetIO().Fonts->TexID = nullptr;
+
+    if (s_fontTexture) {
+        delete s_fontTexture;
+        s_fontTexture = nullptr;
+    }
+
+    for (unsigned int i = 0; i < ImGuiMouseCursor_COUNT; ++i) {
+        if (s_mouseCursorLoaded[i]) {
+            delete s_mouseCursors[i];
+            s_mouseCursors[i] = nullptr;
+            s_mouseCursorLoaded[i] = false;
+        }
+    }
+
     ImGui::DestroyContext();
 }
 

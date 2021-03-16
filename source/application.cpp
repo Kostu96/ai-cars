@@ -56,9 +56,11 @@ void Application::render()
 
     m_world->DebugDraw();
 
-    ImGui::Begin("Options");
-    ImGui::SliderFloat(STRINGIFY(renderScaleFactor), &renderScaleFactor, 16.f, 36.f);
-    ImGui::End();
+    //ImGui::Begin("Options");
+    //ImGui::SliderFloat(STRINGIFY(renderScaleFactor), &renderScaleFactor, 16.f, 36.f);
+    //ImGui::End();
+
+    ImGui::ShowDemoWindow();
 
     im_sf::render();
     m_window.display();
