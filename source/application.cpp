@@ -1,6 +1,7 @@
 #include "application.h"
 #include "helpers/imgui_sfml.h"
 #include "common.h"
+#include "track.h"
 
 #include <SFML/Window/Event.hpp>
 #include <imgui.h>
@@ -16,6 +17,8 @@ Application::Application() :
     
     m_dbgDrawHelper.SetFlags(DebugDraw::e_shapeBit);
     m_world->SetDebugDraw(&m_dbgDrawHelper);
+
+    createTrack(*m_world.get());
 }
 
 void Application::run()
