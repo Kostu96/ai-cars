@@ -1,6 +1,6 @@
 [submodule "box2d"]
-	path = box2d
+	path = third_party/box2d
 	url = https://github.com/erincatto/box2d
 [submodule "SFML"]
-	path = SFML
+	path = third_party/SFML
 	url = https://github.com/SFML/SFML.git
