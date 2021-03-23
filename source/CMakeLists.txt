@@ -1,5 +1,9 @@
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/car/car.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/car/car.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/car/wheel.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/car/wheel.h
     ${CMAKE_CURRENT_SOURCE_DIR}/helpers/debug_draw.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/helpers/debug_draw.h
     ${CMAKE_CURRENT_SOURCE_DIR}/helpers/imgui_sfml.cpp

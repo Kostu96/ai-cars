@@ -11,9 +11,7 @@ class DebugDraw : public b2Draw
 public:
     DebugDraw(sf::RenderWindow& window) : m_window(window) {}
 
-    inline void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override {
-        DrawSolidPolygon(vertices, vertexCount, color);
-    }
+    void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 
     void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 
@@ -27,7 +25,7 @@ public:
 
     inline void DrawTransform(const b2Transform& xf) override {}
 
-    inline void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override {}
+    void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override;
 private:
     inline sf::Color DebugDraw::B2SFColor(const b2Color& color, sf::Uint8 alpha = 255) {
         return {

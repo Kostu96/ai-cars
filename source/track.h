@@ -1,5 +1,7 @@
-#include "box2d//box2d.h"
+#pragma once
 #include "common.h"
+
+#include <box2d/box2d.h>
 
 void addWall(b2World& world, float length, b2Vec2 pos, float angle) {
     b2BodyDef bodyDef;
@@ -39,4 +41,17 @@ void createTrack(b2World& world) {
     addWall(world, length, pos, 140.f);
     pos += { -length, 0.f };
     addWall(world, length, pos, 140.f);
+
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_staticBody;
+    bodyDef.position = { 0.f, -7.f };
+    auto body = world.CreateBody(&bodyDef);
+
+    /*b2ChainShape shape;
+    b2Vec2 vs[2] = {
+        { 0.f, 0.f },
+        { 4.f, 0.f }
+    };
+    shape.CreateLoop(vs, 2);
+    body->CreateFixture(&shape, 0.f);*/
 }

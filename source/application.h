@@ -1,9 +1,10 @@
 #pragma once
+#include "helpers/debug_draw.h"
+#include "car/car.h"
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <box2d/b2_world.h>
 #include <memory>
-
-#include "helpers/debug_draw.h"
 
 class Application {
 public:
@@ -17,4 +18,5 @@ private:
     sf::RenderWindow m_window;
     std::unique_ptr<b2World> m_world;
     DebugDraw m_dbgDrawHelper;
+    std::unique_ptr<Car> m_car;
 };
