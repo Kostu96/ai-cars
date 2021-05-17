@@ -17,7 +17,7 @@ public:
     b2Body* getBody() { return m_body; }
 
     void updateFriction();
-    void updateDrive(unsigned int control);
+    void updateDrive(int rotation, int speed);
 private:
     b2Vec2 getLateralVelocity() const;
     b2Vec2 getForwardVelocity() const;

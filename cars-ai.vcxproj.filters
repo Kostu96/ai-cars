@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\car\car.cpp">
+      <Filter>source\car</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\car\wheel.cpp">
+      <Filter>source\car</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\helpers\debug_draw.cpp">
+      <Filter>source\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\helpers\imgui_sfml.cpp">
+      <Filter>source\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\application.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\SI\SI_cars\ai-cars\source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\car\car.h">
+      <Filter>source\car</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\car\wheel.h">
+      <Filter>source\car</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\helpers\debug_draw.h">
+      <Filter>source\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\helpers\imgui_sfml.h">
+      <Filter>source\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\application.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\common.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\SI\SI_cars\ai-cars\source\track.h">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\SI\SI_cars\ai-cars\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\SI\SI_cars\ai-cars\source\CMakeLists.txt">
+      <Filter>source</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{2B3C5F54-EC1C-3912-B63E-A074E0B5D8E4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\car">
+      <UniqueIdentifier>{199F2468-480B-360D-91FF-86C1D7F1BBE5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\helpers">
+      <UniqueIdentifier>{8C1F5C15-EB61-3561-AC00-CE30D06442A8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

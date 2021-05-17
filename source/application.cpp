@@ -3,6 +3,7 @@
 #include "common.h"
 #include "track.h"
 
+
 #include <SFML/Window/Event.hpp>
 #include <imgui.h>
 
@@ -21,7 +22,7 @@ Application::Application() :
     );
     m_world->SetDebugDraw(&m_dbgDrawHelper);
 
-    //createTrack(*m_world.get());
+    createTrack(*m_world.get());
 
     m_car = std::make_unique<Car>(m_world.get());
 }
@@ -45,8 +46,34 @@ void Application::processEvents()
     sf::Event e;
     while (m_window.pollEvent(e))
     {
-        if (e.type == sf::Event::Closed)
-            m_window.close();
+		if (e.type == sf::Event::Closed)
+			m_window.close();
+
+		else if (e.type == sf::Event::KeyPressed)
+		{
+			switch (e.key.code)
+			{
+			case sf::Keyboard::A:
+				m_car->rotation = -1;
+				break;
+			case sf::Keyboard::D:
+				m_car->rotation = 1;
+				break;
+			case sf::Keyboard::W:
+				m_car->speed = 1;
+				break;
+			case sf::Keyboard::S:
+				m_car->speed = -1;
+				break;
+			}
+		}
+
+		else if (e.type == sf::Event::KeyReleased)
+		{
+			m_car->rotation = 0;
+			m_car->speed = 0;
+		}
+			
 
         im_sf::processEvents(e);
     }
@@ -55,6 +82,7 @@ void Application::processEvents()
 void Application::update(const sf::Time& dt)
 {
     //wheel->updateFriction();
+	m_car->update();
 
     m_world->Step(1 / 60.f, 10, 8);
     im_sf::update(dt);

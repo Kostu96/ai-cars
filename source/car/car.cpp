@@ -3,7 +3,7 @@
 Car::Car(b2World* world)
 {
     b2BodyDef bodyDef;
-    bodyDef.position = { 8.f, 2.f };
+    bodyDef.position = { -7.f, -7.f };
     bodyDef.type = b2_dynamicBody;
     m_body = world->CreateBody(&bodyDef);
 
@@ -68,4 +68,10 @@ Car::~Car()
 
 void Car::update()
 {
+	b2Vec2 angle = this->m_body->GetPosition();
+	for (auto wheel : m_wheels)
+	{
+		wheel->updateDrive(rotation, speed);
+	}
+		
 }

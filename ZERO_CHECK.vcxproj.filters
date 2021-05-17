@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\SI\SI_cars\ai-cars\CMakeFiles\71ba1f67f590da2206f732e4bf3132e3\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{AA44E14D-624D-3DBD-8D95-11E853253926}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

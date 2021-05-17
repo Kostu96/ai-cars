@@ -33,8 +33,31 @@ void Wheel::updateFriction()
     m_body->ApplyForce(dragForceMagnitude * currentForwardNormal, m_body->GetWorldCenter(), true);
 }
 
-void Wheel::updateDrive(unsigned int control)
+void Wheel::updateDrive(int rotation, int speed)
 {
+	switch (rotation)
+	{
+	case -1:
+		m_body->ApplyTorque(-0.3f, true);
+		break;
+	case 1:
+		m_body->ApplyTorque(0.3f, true);
+		break;
+	default:
+		break;
+	}
+
+	switch (speed)
+	{
+	case -1:
+		m_body->ApplyForce(-1.0f * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
+		break;
+	case 1:
+		m_body->ApplyForce(1.0f * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
+		break;
+	default:
+		break;
+	}
 }
 
 b2Vec2 Wheel::getLateralVelocity() const

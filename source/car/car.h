@@ -9,9 +9,11 @@ public:
     Car(b2World *world);
     ~Car();
 
-    void update();
+	void update();
+	int speed, rotation;
 private:
     b2Body *m_body = nullptr;
     std::vector<Wheel*> m_wheels;
     b2RevoluteJoint *m_flJoint, *m_frJoint;
+	
 };
