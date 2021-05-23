@@ -70,8 +70,19 @@ void Application::processEvents()
 
 		else if (e.type == sf::Event::KeyReleased)
 		{
-			m_car->rotation = 0;
-			m_car->speed = 0;
+			switch (e.key.code)
+			{
+			case sf::Keyboard::A:
+			case sf::Keyboard::D:
+				m_car->rotation = 0;
+				break;
+			case sf::Keyboard::W:
+			case sf::Keyboard::S:
+				m_car->speed = 0;
+				break;
+			}
+			
+			
 		}
 			
 

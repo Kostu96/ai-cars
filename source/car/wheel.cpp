@@ -38,10 +38,10 @@ void Wheel::updateDrive(int rotation, int speed)
 	switch (rotation)
 	{
 	case -1:
-		m_body->ApplyTorque(-0.3f, true);
+		m_body->ApplyTorque(-m_maxLateralImpulse, true);
 		break;
 	case 1:
-		m_body->ApplyTorque(0.3f, true);
+		m_body->ApplyTorque(m_maxLateralImpulse, true);
 		break;
 	default:
 		break;
@@ -50,14 +50,16 @@ void Wheel::updateDrive(int rotation, int speed)
 	switch (speed)
 	{
 	case -1:
-		m_body->ApplyForce(-1.0f * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
+		m_body->ApplyForce(-m_maxDriveForce * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
 		break;
 	case 1:
-		m_body->ApplyForce(1.0f * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
+		m_body->ApplyForce(m_maxDriveForce * m_body->GetWorldVector(b2Vec2(0, 1)), m_body->GetWorldCenter(), true);
 		break;
 	default:
 		break;
 	}
+
+	this->updateFriction();
 }
 
 b2Vec2 Wheel::getLateralVelocity() const

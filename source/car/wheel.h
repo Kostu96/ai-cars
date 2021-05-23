@@ -4,12 +4,12 @@
 class Wheel
 {
 public:
-    enum class Control : unsigned int {
+    /*enum class Control : unsigned int {
         Left  = 1 << 0,
         Right = 1 << 1,
         Up    = 1 << 2,
         Down  = 1 << 3
-    };
+    };*/
 
     Wheel(b2World* world, b2Vec2 pos);
     ~Wheel();
@@ -26,6 +26,6 @@ private:
 
     float m_maxForwardSpeed = 80.f;
     float m_maxBackwardSpeed = -20.f;
-    float m_maxDriveForce = 150.f;
-    float m_maxLateralImpulse = 3.f;
+    float m_maxDriveForce = 50.f;
+    float m_maxLateralImpulse =15.f;
 };
