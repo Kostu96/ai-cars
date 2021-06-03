@@ -10,6 +10,11 @@ void Neuron::setInputsCount(int inputs_count)
 	this->inputs_count = inputs_count;
 }
 
+int Neuron::getInputsCount()
+{
+	return inputs_count;
+}
+
 void Neuron::setInputs(double * inputs)
 {
 	this->inputs = inputs;

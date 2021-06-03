@@ -5,6 +5,7 @@ class Neuron
 public:
 	Neuron();
 	void setInputsCount(int inputs_count);
+	int getInputsCount();
 	void setInputs(double *inputs);
 	void setWeights(double *weights);
 	void activate();
