@@ -20,7 +20,5 @@ private:
     b2World* world;
     std::vector<Wheel*> m_wheels;
     b2RevoluteJoint *m_flJoint, *m_frJoint;
-	
-    b2RevoluteJoint* m_flJoint, * m_frJoint;
     std::vector<double> sensors[8];
 };
