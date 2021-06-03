@@ -3,18 +3,12 @@
 
 Car::Car(b2World* world)
 {
-<<<<<<< HEAD
 	b2BodyDef bodyDef;
 	bodyDef.position = { -7.f, -7.f };
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.enabled = true;
 	m_body = world->CreateBody(&bodyDef);
 	this->world = world;
-
-    b2BodyDef bodyDef;
-    bodyDef.position = { -7.f, -7.f };
-    bodyDef.type = b2_dynamicBody;
-    m_body = world->CreateBody(&bodyDef);
 
 	b2Vec2 vertices[6] = {
 		{  0.6f, -1.1f },
