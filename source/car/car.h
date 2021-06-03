@@ -14,9 +14,7 @@ public:
     int speed, rotation;
     double rotationAngle;
     //double min = 1000.0;
-
-	void update();
-	int speed, rotation;
+	
 private:
     b2Body* m_body = nullptr;
     b2World* world;
