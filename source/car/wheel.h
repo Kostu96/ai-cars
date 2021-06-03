@@ -24,8 +24,8 @@ private:
 
     b2Body* m_body = nullptr;
 
-    float m_maxForwardSpeed = 80.f;
+    float m_maxForwardSpeed = 60.f;
     float m_maxBackwardSpeed = -20.f;
-    float m_maxDriveForce = 40.f;
+    float m_maxDriveForce = 25.f;
     float m_maxLateralImpulse = 15.f;
 };

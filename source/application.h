@@ -15,8 +15,8 @@ private:
     void update(const sf::Time& dt);
     void render();
 
-    sf::RenderWindow m_window;
     std::unique_ptr<b2World> m_world;
+    sf::RenderWindow m_window;
     DebugDraw m_dbgDrawHelper;
     std::unique_ptr<Car> m_car;
 };
