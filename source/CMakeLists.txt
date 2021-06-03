@@ -13,6 +13,10 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/common.h
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/track.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/neuron.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/neuron.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/neural_network.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/neural_network.cpp
 )
 
 set(SOURCES ${SOURCES} PARENT_SCOPE)

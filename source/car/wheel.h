@@ -26,6 +26,6 @@ private:
 
     float m_maxForwardSpeed = 80.f;
     float m_maxBackwardSpeed = -20.f;
-    float m_maxDriveForce = 50.f;
-    float m_maxLateralImpulse =15.f;
+    float m_maxDriveForce = 40.f;
+    float m_maxLateralImpulse = 15.f;
 };
