@@ -11,8 +11,14 @@ void addWall(b2World& world, float length, b2Vec2 pos, float angle) {
     auto body = world.CreateBody(&bodyDef);
     
     b2PolygonShape shape;
+    b2Filter filterDef;
+    filterDef.categoryBits = 0x2;
+    filterDef.maskBits = 0x1;
+    filterDef.groupIndex = 0x1;
     shape.SetAsBox(length / 2.f, 0.05f);
     body->CreateFixture(&shape, 0.f);
+    b2Fixture* fixture = body->CreateFixture(&shape, 0.1f);
+    fixture->SetFilterData(filterDef);
 }
 
 void createTrack(b2World& world) {

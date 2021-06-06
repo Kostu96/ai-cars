@@ -8,8 +8,13 @@ Wheel::Wheel(b2World* world, b2Vec2 pos)
 	m_body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape polygonShape;
+	b2Filter filterDef;
+	filterDef.categoryBits = 0x1;
+	filterDef.maskBits = 0x2;
+	filterDef.groupIndex = 0x0;
 	polygonShape.SetAsBox(0.08f, 0.3f);
-	m_body->CreateFixture(&polygonShape, 1);
+	b2Fixture* fixture = m_body->CreateFixture(&polygonShape, 1);
+	fixture->SetFilterData(filterDef);
 
 	//m_body->SetUserData(this);
 }

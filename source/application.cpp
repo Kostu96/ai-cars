@@ -24,7 +24,10 @@ Application::Application() :
 
     createTrack(*m_world.get());
 
-    m_car = std::make_unique<Car>(m_world.get());
+    for (int i = 0; i < carCount; i++)
+    {
+        m_car.push_back(std::make_unique<Car>(m_world.get()));
+    }
 }
 
 void Application::run()
@@ -54,16 +57,16 @@ void Application::processEvents()
 			switch (e.key.code)
 			{
 			case sf::Keyboard::A:
-				m_car->rotation = -1;
+				m_car[0]->rotation = -1;
 				break;
 			case sf::Keyboard::D:
-				m_car->rotation = 1;
+				m_car[0]->rotation = 1;
 				break;
 			case sf::Keyboard::W:
-				m_car->speed = 1;
+				m_car[0]->speed = 1;
 				break;
 			case sf::Keyboard::S:
-				m_car->speed = -1;
+				m_car[0]->speed = -1;
 				break;
 			}
 		}
@@ -74,11 +77,11 @@ void Application::processEvents()
 			{
 			case sf::Keyboard::A:
 			case sf::Keyboard::D:
-				m_car->rotation = 0;
+				m_car[0]->rotation = 0;
 				break;
 			case sf::Keyboard::W:
 			case sf::Keyboard::S:
-				m_car->speed = 0;
+				m_car[0]->speed = 0;
 				break;
 			}
 			
@@ -91,16 +94,16 @@ void Application::processEvents()
             switch (e.key.code)
             {
             case sf::Keyboard::A:
-                m_car->rotation = -1;
+                m_car[0]->rotation = -1;
                 break;
             case sf::Keyboard::D:
-                m_car->rotation = 1;
+                m_car[0]->rotation = 1;
                 break;
             case sf::Keyboard::W:
-                m_car->speed = 1;
+                m_car[0]->speed = 1;
                 break;
             case sf::Keyboard::S:
-                m_car->speed = -1;
+                m_car[0]->speed = -1;
                 break;
             }
         }
@@ -111,11 +114,11 @@ void Application::processEvents()
             {
             case sf::Keyboard::A:
             case sf::Keyboard::D:
-                m_car->rotation = 0;
+                m_car[0]->rotation = 0;
                 break;
             case sf::Keyboard::W:
             case sf::Keyboard::S:
-                m_car->speed = 0;
+                m_car[0]->speed = 0;
                 break;
             }
 
@@ -129,9 +132,8 @@ void Application::processEvents()
 void Application::update(const sf::Time& dt)
 {
     //wheel->updateFriction();
-	m_car->update();
+    for(int i = 0; i < carCount; i ++) m_car[i]->update();
 
-	m_car->update();
 
     m_world->Step(1 / 60.f, 10, 8);
     im_sf::update(dt);
