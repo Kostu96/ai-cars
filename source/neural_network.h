@@ -9,6 +9,7 @@ public:
 	double *getOutputs();
 	void setRandomWeights();
 	void setWeights(double ***weights);
+	double ***getWeights();
 	void setInputs(double *inputs);
 private:
 	Neuron** layers;

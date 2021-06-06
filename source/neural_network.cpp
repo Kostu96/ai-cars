@@ -44,6 +44,11 @@ void Neural_network::setWeights(double *** weights)
 	}
 }
 
+double *** Neural_network::getWeights()
+{
+	return weights;
+}
+
 void::Neural_network::setRandomWeights()
 {
 	weights = new double**[layers_count];
@@ -55,8 +60,8 @@ void::Neural_network::setRandomWeights()
 		int layer_i_inputs_count = layers[i][0].getInputsCount();
 		for (int j = 0; j < layers_neurons_count[i]; j++)
 		{
-			weights[i][j] = new double[layer_i_inputs_count];
-			for (int k = 0; k < layer_i_inputs_count; k++)
+			weights[i][j] = new double[layer_i_inputs_count+1]; //+1 for bias weight
+			for (int k = 0; k < layer_i_inputs_count+1; k++)
 			{
 				weights[i][j][k] = ((double) rand() / RAND_MAX - 0.5) * 0.35;
 			}

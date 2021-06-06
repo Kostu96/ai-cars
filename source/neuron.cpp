@@ -33,10 +33,12 @@ double Neuron::getOutput()
 void Neuron::activate()
 {
 	double sum = 0;
-	for (int i = 0; i < this->inputs_count; i++)
+	for (int i = 0; i < inputs_count; i++)
 	{
 		sum += inputs[i] * weights[i];
 	}
+	sum += 10 * weights[inputs_count]; //add bias
+
 	output = activationFunction(sum);
 }
 

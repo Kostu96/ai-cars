@@ -62,6 +62,8 @@ Car::Car(b2World* world)
 	m_wheels.push_back(wheel);
 	
 	steering_network = new Neural_network(8, 2, neurons_count);
+
+	steering_network->setRandomWeights();
 }
 
 Car::~Car()
@@ -177,34 +179,23 @@ void Car::update()
 	}
 
 	steering_network->setInputs(sensorsInput);
-	steering_network->setRandomWeights();
+	
 	steering_network->activate_network();
 	double* network_outputs;
 	network_outputs = steering_network->getOutputs();
 
-	if (network_outputs[0] < (0.5))
+	if (network_outputs[0] < (1.0/3))
 	{
 		rotation = -1;
 	}
-	/*else if (network_outputs[0] < (0.6))
+	else if (network_outputs[0] < (2.0/3))
 	{
 		rotation = 0;
-	}*/
+	}
 	else
 	{
 		rotation = 1;
 	}
 
-	if (network_outputs[1] < (0.5))
-	{
-		speed = -1;
-	}
-	/*else if (network_outputs[1] < (0.6))
-	{
-		speed = 0;
-	}
-	else*/
-	{
-		speed = 1;
-	}
+	speed = 1;
 }
