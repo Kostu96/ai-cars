@@ -1,4 +1,5 @@
 #include "car.h"
+#include "windows.h"
 #include "../neural_network.h"
 #include "../../third_party/SFML/src/SFML/Graphics/GLLoader.hpp"
 
@@ -20,8 +21,14 @@ Car::Car(b2World* world)
 		{ -0.6f, -1.1f }
 	};
 	b2PolygonShape polygonShape;
+	b2Filter filterDef;
+	filterDef.categoryBits = 0x1;
+	filterDef.maskBits = 0x2;
+	filterDef.groupIndex = 0x0;
 	polygonShape.Set(vertices, 6);
 	b2Fixture* fixture = m_body->CreateFixture(&polygonShape, 0.1f);
+	fixture->SetFilterData(filterDef);
+
 
 	Wheel* wheel = nullptr;
 	b2RevoluteJointDef jointDef;
@@ -86,28 +93,28 @@ void Car::update()
 	{
 		b2RayCastInput input;
 		input.p1 = m_body->GetPosition();
-		if (i < 4) {
+		if (i < 4) { //kola
 			input.p2 = m_wheels[i]->getBody()->GetPosition();
 		}	
-		if (i == 4) {
+		if (i == 4) {//przod
 			b2Vec2 tmp = m_wheels[0]->getBody()->GetPosition();
 			tmp += m_wheels[1]->getBody()->GetPosition();
 			tmp *= 0.5;
 			input.p2 = tmp;
 		}
-		if (i == 5) {
+		if (i == 5) {//tyl
 			b2Vec2 tmp = m_wheels[2]->getBody()->GetPosition();
 			tmp += m_wheels[3]->getBody()->GetPosition();
 			tmp *= 0.5;
 			input.p2 = tmp;
 		}
-		if (i == 6) {
+		if (i == 6) {//lewy bok
 			b2Vec2 tmp = m_wheels[1]->getBody()->GetPosition();
 			tmp += m_wheels[2]->getBody()->GetPosition();
 			tmp *= 0.5;
 			input.p2 = tmp;
 		}
-		if (i == 7) {
+		if (i == 7) {// prawy bok
 			b2Vec2 tmp = m_wheels[3]->getBody()->GetPosition();
 			tmp += m_wheels[0]->getBody()->GetPosition();
 			tmp *= 0.5;
@@ -135,10 +142,10 @@ void Car::update()
 		switch (i)
 		{
 		case 0:
-			sensors[0].push_back(closestFraction);
+			sensors[0].push_back(closestFraction-0.36f);
 			break;
 		case 1:
-			sensors[1].push_back(closestFraction);
+			sensors[1].push_back(closestFraction-0.15f);
 			break;
 		case 2:
 			sensors[2].push_back(closestFraction);
@@ -147,30 +154,45 @@ void Car::update()
 			sensors[3].push_back(closestFraction);
 			break;
 		case 4:
-			sensors[4].push_back(closestFraction);
+			sensors[4].push_back(closestFraction-0.43f);
 			break;
 		case 5:
-			sensors[5].push_back(closestFraction);
+			sensors[5].push_back(closestFraction-0.1f);
 			break;
 		case 6:
-			sensors[6].push_back(closestFraction);
+			sensors[6].push_back(closestFraction-0.18f);
 			break;
 		case 7:
-			sensors[7].push_back(closestFraction);
+			sensors[7].push_back(closestFraction-0.18f);
 			break;
 
 		}
 
 		/*
-		if(i < 4)printf("Kolo %i = %f\n", i, closestFraction);
-		else if (i == 4)printf("Przod = %f\n", closestFraction);
-		else if (i == 5)printf("Tyl = %f\n", closestFraction);
-		else if (i == 6)printf("Bok lewy = %f\n", closestFraction);
-		else if (i == 7)printf("Bok prawy = %f\n", closestFraction);
-		if ((closestFraction) <= min) min = (closestFraction);
+		if(i < 4)printf("Kolo %i = %f\n", i, sensors[i].back());
+		else if (i == 4)printf("Przod = %f\n", sensors[i].back());
+		else if (i == 5)printf("Tyl = %f\n", sensors[i].back());
+		else if (i == 6)printf("Bok lewy = %f\n", sensors[i].back());
+		else if (i == 7)printf("Bok prawy = %f\n", sensors[i].back());
 		*/
+		if ((sensors[i].back()) <= min) min = (sensors[i].back());
 	}
 	//printf("min = %f\n", this->min);
+	if (min < 0.1f)
+	{
+		b2Vec2 tmp = m_body->GetPosition();
+		printf("koniec\n");
+		printf("%f\n",ret);
+		m_body->SetTransform(-m_body->GetPosition(), 0);
+		m_body->SetTransform({ -7.f, -7.f }, 0);
+		for (int i = 0; i < 4; i++)
+		{
+			m_wheels[i]->getBody()->SetTransform(-m_body->GetPosition(), 0);
+			m_wheels[i]->getBody()->SetTransform({ -7.f, -7.f }, 0);
+		}
+		min = 1000.f;
+		ret = 0.f;
+	}
 
 	double sensorsInput[8];
 	for (int i = 0; i < 8; i++)
@@ -197,5 +219,17 @@ void Car::update()
 		rotation = 1;
 	}
 
-	speed = 1;
+	if (network_outputs[1] < (0.5))
+	{
+		speed = -1;
+	}
+	/*else if (network_outputs[1] < (0.6))
+	{
+		speed = 0;
+	}
+	else*/
+	{
+		speed = 1;
+		ret += 0.1f;
+	}
 }
