@@ -60,6 +60,8 @@ Car::Car(b2World* world)
 	jointDef.localAnchorA = m_body->GetLocalPoint(wheel->getBody()->GetWorldCenter());
 	world->CreateJoint(&jointDef);
 	m_wheels.push_back(wheel);
+	
+	steering_network = new Neural_network(8, 2, neurons_count);
 }
 
 Car::~Car()
@@ -157,45 +159,6 @@ void Car::update()
 
 		}
 
-		int neurons_count[2] = { 5,2 };
-		Neural_network *steering_network = new Neural_network(8, 2, neurons_count);
-
-		//stworzyæ tablicê ostatnich odczytów sensora i podaæ jako input
-
-		//steering_network->setInputs(...);
-		steering_network->setRandomWeights();
-		steering_network->activate_network();
-		double* network_outputs;
-		network_outputs = steering_network->getOutputs();
-
-		if (network_outputs[0] < (1.0 / 3))
-		{
-			rotation = -1;
-		}
-		else if (network_outputs[0] < (2.0 / 3))
-		{
-			rotation = 0;
-		}
-		else
-		{
-			rotation = 1;
-		}
-
-		if (network_outputs[1] < (1.0 / 3))
-		{
-			speed = -1;
-		}
-		else if (network_outputs[1] < (2.0 / 3))
-		{
-			speed = 0;
-		}
-		else
-		{
-			speed = 1;
-		}
-
-
-
 		/*
 		if(i < 4)printf("Kolo %i = %f\n", i, closestFraction);
 		else if (i == 4)printf("Przod = %f\n", closestFraction);
@@ -207,4 +170,41 @@ void Car::update()
 	}
 	//printf("min = %f\n", this->min);
 
+	double sensorsInput[8];
+	for (int i = 0; i < 8; i++)
+	{
+		sensorsInput[i] = sensors[i].back();
+	}
+
+	steering_network->setInputs(sensorsInput);
+	steering_network->setRandomWeights();
+	steering_network->activate_network();
+	double* network_outputs;
+	network_outputs = steering_network->getOutputs();
+
+	if (network_outputs[0] < (0.5))
+	{
+		rotation = -1;
+	}
+	/*else if (network_outputs[0] < (0.6))
+	{
+		rotation = 0;
+	}*/
+	else
+	{
+		rotation = 1;
+	}
+
+	if (network_outputs[1] < (0.5))
+	{
+		speed = -1;
+	}
+	/*else if (network_outputs[1] < (0.6))
+	{
+		speed = 0;
+	}
+	else*/
+	{
+		speed = 1;
+	}
 }

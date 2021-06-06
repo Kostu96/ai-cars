@@ -1,5 +1,6 @@
 #include "neural_network.h"
 #include <cstdlib>
+#include <ctime>
 
 Neural_network::Neural_network(int inputs_count, int layers_count, int * layers_neurons_count)
 {
@@ -20,6 +21,8 @@ Neural_network::Neural_network(int inputs_count, int layers_count, int * layers_
 			layers[i][j].setInputsCount(layers_neurons_count[i-1]);
 		}
 	}
+
+	srand(time(NULL));
 }
 
 void Neural_network::setInputs(double *inputs)
