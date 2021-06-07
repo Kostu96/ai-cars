@@ -3,6 +3,9 @@
 #include "../neural_network.h"
 #include "../../third_party/SFML/src/SFML/Graphics/GLLoader.hpp"
 
+int Car::stoppedCars = 0;
+std::vector<double ***> Car::carsWeightsSorted;
+
 Car::Car(b2World* world)
 {
 	b2BodyDef bodyDef;
@@ -70,7 +73,7 @@ Car::Car(b2World* world)
 	
 	steering_network = new Neural_network(8, 2, neurons_count);
 
-	steering_network->setRandomWeights();
+	//steering_network->setRandomWeights();
 }
 
 Car::~Car()
@@ -81,6 +84,36 @@ Car::~Car()
 	m_body->GetWorld()->DestroyBody(m_body);
 }
 
+bool Car::isStopped()
+{
+	return stopped;
+}
+
+void Car::randomizeNetworkWeights()
+{
+	steering_network->setRandomWeights();
+}
+
+void Car::setNetworkWeights(double *** weights)
+{
+	steering_network->setWeights(weights);
+}
+
+void Car::crossover(double *** p1weights, double *** p2weights)
+{
+	steering_network->crossoverWeights(p1weights, p2weights);
+}
+
+double *** Car::getNetworkWeights()
+{
+	return steering_network->getWeights();
+}
+
+void Car::mutate()
+{
+	steering_network->mutate();
+}
+
 void Car::update()
 {
 	b2Vec2 angle = this->m_body->GetPosition();
@@ -89,147 +122,170 @@ void Car::update()
 		wheel->updateDrive(rotation, speed);
 	}
 
-	for (int i = 0; i < 8; i++)
+	if(stopped == false)
 	{
-		b2RayCastInput input;
-		input.p1 = m_body->GetPosition();
-		if (i < 4) { //kola
-			input.p2 = m_wheels[i]->getBody()->GetPosition();
-		}	
-		if (i == 4) {//przod
-			b2Vec2 tmp = m_wheels[0]->getBody()->GetPosition();
-			tmp += m_wheels[1]->getBody()->GetPosition();
-			tmp *= 0.5;
-			input.p2 = tmp;
-		}
-		if (i == 5) {//tyl
-			b2Vec2 tmp = m_wheels[2]->getBody()->GetPosition();
-			tmp += m_wheels[3]->getBody()->GetPosition();
-			tmp *= 0.5;
-			input.p2 = tmp;
-		}
-		if (i == 6) {//lewy bok
-			b2Vec2 tmp = m_wheels[1]->getBody()->GetPosition();
-			tmp += m_wheels[2]->getBody()->GetPosition();
-			tmp *= 0.5;
-			input.p2 = tmp;
-		}
-		if (i == 7) {// prawy bok
-			b2Vec2 tmp = m_wheels[3]->getBody()->GetPosition();
-			tmp += m_wheels[0]->getBody()->GetPosition();
-			tmp *= 0.5;
-			input.p2 = tmp;
-		}
-		input.maxFraction = 30;
+		
 
-		double closestFraction = 30.0; //start with end of line as p2
-		b2Vec2 intersectionNormal(0, 0);
-		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
-			for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-				b2Body* body = f->GetBody();
-				if (body->GetType() == b2_staticBody) {
-					b2RayCastOutput output;
-					if (!f->RayCast(&output, input, 1))
-						continue;
-					if (output.fraction < closestFraction) {
-						closestFraction = output.fraction;
-						intersectionNormal = output.normal;
+		for (int i = 0; i < 8; i++)
+		{
+			b2RayCastInput input;
+			input.p1 = m_body->GetPosition();
+			if (i < 4) { //kola
+				input.p2 = m_wheels[i]->getBody()->GetPosition();
+			}
+			if (i == 4) {//przod
+				b2Vec2 tmp = m_wheels[0]->getBody()->GetPosition();
+				tmp += m_wheels[1]->getBody()->GetPosition();
+				tmp *= 0.5;
+				input.p2 = tmp;
+			}
+			if (i == 5) {//tyl
+				b2Vec2 tmp = m_wheels[2]->getBody()->GetPosition();
+				tmp += m_wheels[3]->getBody()->GetPosition();
+				tmp *= 0.5;
+				input.p2 = tmp;
+			}
+			if (i == 6) {//lewy bok
+				b2Vec2 tmp = m_wheels[1]->getBody()->GetPosition();
+				tmp += m_wheels[2]->getBody()->GetPosition();
+				tmp *= 0.5;
+				input.p2 = tmp;
+			}
+			if (i == 7) {// prawy bok
+				b2Vec2 tmp = m_wheels[3]->getBody()->GetPosition();
+				tmp += m_wheels[0]->getBody()->GetPosition();
+				tmp *= 0.5;
+				input.p2 = tmp;
+			}
+			input.maxFraction = 30;
+
+			double closestFraction = 30.0; //start with end of line as p2
+			b2Vec2 intersectionNormal(0, 0);
+			for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
+				for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+					b2Body* body = f->GetBody();
+					if (body->GetType() == b2_staticBody) {
+						b2RayCastOutput output;
+						if (!f->RayCast(&output, input, 1))
+							continue;
+						if (output.fraction < closestFraction) {
+							closestFraction = output.fraction;
+							intersectionNormal = output.normal;
+						}
 					}
 				}
 			}
+			closestFraction -= 1.19;
+			switch (i)
+			{
+			case 0:
+				sensors[0].push_back(closestFraction - 0.36f);
+				break;
+			case 1:
+				sensors[1].push_back(closestFraction - 0.15f);
+				break;
+			case 2:
+				sensors[2].push_back(closestFraction);
+				break;
+			case 3:
+				sensors[3].push_back(closestFraction);
+				break;
+			case 4:
+				sensors[4].push_back(closestFraction - 0.43f);
+				break;
+			case 5:
+				sensors[5].push_back(closestFraction - 0.1f);
+				break;
+			case 6:
+				sensors[6].push_back(closestFraction - 0.18f);
+				break;
+			case 7:
+				sensors[7].push_back(closestFraction - 0.18f);
+				break;
+
+			}
+
+			/*
+			if(i < 4)printf("Kolo %i = %f\n", i, sensors[i].back());
+			else if (i == 4)printf("Przod = %f\n", sensors[i].back());
+			else if (i == 5)printf("Tyl = %f\n", sensors[i].back());
+			else if (i == 6)printf("Bok lewy = %f\n", sensors[i].back());
+			else if (i == 7)printf("Bok prawy = %f\n", sensors[i].back());
+			*/
+			if ((sensors[i].back()) <= min) min = (sensors[i].back());
 		}
-		closestFraction -= 1.19;
-		switch (i)
+		//printf("min = %f\n", this->min);
+		if (min < 0.1f || ret>30)
 		{
-		case 0:
-			sensors[0].push_back(closestFraction-0.36f);
-			break;
-		case 1:
-			sensors[1].push_back(closestFraction-0.15f);
-			break;
-		case 2:
-			sensors[2].push_back(closestFraction);
-			break;
-		case 3:
-			sensors[3].push_back(closestFraction);
-			break;
-		case 4:
-			sensors[4].push_back(closestFraction-0.43f);
-			break;
-		case 5:
-			sensors[5].push_back(closestFraction-0.1f);
-			break;
-		case 6:
-			sensors[6].push_back(closestFraction-0.18f);
-			break;
-		case 7:
-			sensors[7].push_back(closestFraction-0.18f);
-			break;
-
+			b2Vec2 tmp = m_body->GetPosition();
+			printf("koniec\n");
+			printf("%f\n", ret);
+			/*m_body->SetTransform(-m_body->GetPosition(), 0);
+			m_body->SetTransform({ -7.f, -7.f }, 0);
+			for (int i = 0; i < 4; i++)
+			{
+				m_wheels[i]->getBody()->SetTransform(-m_body->GetPosition(), 0);
+				m_wheels[i]->getBody()->SetTransform({ -7.f, -7.f }, 0);
+			}
+			min = 1000.f;
+			ret = 0.f;*/
+			this->stop();
+			return;
 		}
 
-		/*
-		if(i < 4)printf("Kolo %i = %f\n", i, sensors[i].back());
-		else if (i == 4)printf("Przod = %f\n", sensors[i].back());
-		else if (i == 5)printf("Tyl = %f\n", sensors[i].back());
-		else if (i == 6)printf("Bok lewy = %f\n", sensors[i].back());
-		else if (i == 7)printf("Bok prawy = %f\n", sensors[i].back());
-		*/
-		if ((sensors[i].back()) <= min) min = (sensors[i].back());
-	}
-	//printf("min = %f\n", this->min);
-	if (min < 0.1f)
-	{
-		b2Vec2 tmp = m_body->GetPosition();
-		printf("koniec\n");
-		printf("%f\n",ret);
-		m_body->SetTransform(-m_body->GetPosition(), 0);
-		m_body->SetTransform({ -7.f, -7.f }, 0);
-		for (int i = 0; i < 4; i++)
+		double sensorsInput[8];
+		for (int i = 0; i < 8; i++)
 		{
-			m_wheels[i]->getBody()->SetTransform(-m_body->GetPosition(), 0);
-			m_wheels[i]->getBody()->SetTransform({ -7.f, -7.f }, 0);
+			sensorsInput[i] = sensors[i].back();
 		}
-		min = 1000.f;
-		ret = 0.f;
-	}
 
-	double sensorsInput[8];
-	for (int i = 0; i < 8; i++)
-	{
-		sensorsInput[i] = sensors[i].back();
-	}
+		steering_network->setInputs(sensorsInput);
 
-	steering_network->setInputs(sensorsInput);
 	
-	steering_network->activate_network();
-	double* network_outputs;
-	network_outputs = steering_network->getOutputs();
+		
+		steering_network->activate_network();
+		double* network_outputs;
+		network_outputs = steering_network->getOutputs();
 
-	if (network_outputs[0] < (1.0/3))
-	{
-		rotation = -1;
-	}
-	else if (network_outputs[0] < (2.0/3))
-	{
-		rotation = 0;
-	}
-	else
-	{
-		rotation = 1;
-	}
+		if (network_outputs[0] < (1.0 / 3))
+		{
+			rotation = -1;
+		}
+		else if (network_outputs[0] < (2.0/3))
+		{
+			rotation = 0;
+		}
+		else
+		{
+			rotation = 1;
+		}
 
-	if (network_outputs[1] < (0.5))
-	{
-		speed = -1;
+		/*if (network_outputs[1] < 0)
+		{
+			speed = -1;
+		}*/
+		/*else if (network_outputs[1] < (0.6))
+		{
+			speed = 0;
+		}*/
+		//else
+		{
+			speed = 1;
+			ret += 0.1f;
+		}
+		
+
+		
 	}
-	/*else if (network_outputs[1] < (0.6))
-	{
-		speed = 0;
-	}
-	else*/
-	{
-		speed = 1;
-		ret += 0.1f;
-	}
+	
 }
+
+void Car::stop()
+{
+	speed = 0;
+	rotation = 0;
+	stopped = true;
+	(Car::stoppedCars)++;
+	Car::carsWeightsSorted.push_back(this->getNetworkWeights());
+}
+

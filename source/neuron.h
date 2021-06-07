@@ -9,6 +9,7 @@ public:
 	void setInputs(double *inputs);
 	void setWeights(double *weights);
 	void activate();
+	void mutate(int weight_index, double weight_modification);
 	double getOutput();
 private:
 	double activationFunction(double t);

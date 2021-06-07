@@ -22,7 +22,12 @@ void Neuron::setInputs(double * inputs)
 
 void Neuron::setWeights(double * weights)
 {
-	this->weights = weights;
+	//this->weights = weights;
+	this->weights = new double[inputs_count + 1];
+	for (int i = 0; i < inputs_count + 1; i++)
+	{
+		this->weights[i] = weights[i];
+	}
 }
 
 double Neuron::getOutput()
@@ -40,6 +45,11 @@ void Neuron::activate()
 	sum += 10 * weights[inputs_count]; //add bias
 
 	output = activationFunction(sum);
+}
+
+void Neuron::mutate(int weight_index, double weight_modification)
+{
+	weights[weight_index] = weights[weight_index] * weight_modification;
 }
 
 double Neuron::activationFunction(double t)
