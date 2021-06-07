@@ -24,4 +24,5 @@ private:
 	int outputs_count;
 	double *outputs;
 	static bool rand_seeded;
+	float neuron_mutation_chance = 0.7;
 };

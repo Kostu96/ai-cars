@@ -224,13 +224,3 @@ void Application::render()
     m_window.display();
 }
 
-double *** Application::copy_weights_array(double *** source, int layers_count, int* layers_neurons_count)
-{
-	double ***result = new double**[layers_count];
-	for (int i = 0; i < layers_count; i++)
-	{
-		result[i] = source[i];
-	}
-	return result;
-
-}

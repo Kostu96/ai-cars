@@ -45,7 +45,7 @@ void Neural_network::mutate()
 	{
 		for (int j = 0; j < layers_neurons_count[i]; j++)
 		{
-			if ((float)rand() / RAND_MAX < 0.5)
+			if ((float)rand() / RAND_MAX < neuron_mutation_chance)
 			{
 				int neuronWeightsCount = layers[i][j].getInputsCount() + 1;
 				int k = rand() % neuronWeightsCount;
@@ -53,8 +53,7 @@ void Neural_network::mutate()
 				//for (int k = 0; k < neuronWeightsCount; k++)
 				{
 					layers[i][j].mutate(k, mod);
-				}
-				
+				}		
 				
 			}
 			
